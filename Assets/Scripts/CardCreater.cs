@@ -51,14 +51,12 @@ public class CardCreater : MonoBehaviour
     /// <summary>
     /// 隨機生成卡片
     /// </summary>
-    /// <param name="stPos">可生成的方法開始位置</param>
-    /// <param name="edPos">結束位置</param>>
+    /// <param name="id">卡片id</param>>
     /// <param name="deck">卡組物件</param>
     /// <returns></returns>
-    public Card RandomCreate(int stPos, int edPos, GameObject deck)
+    public Card CreateCard(int id, GameObject deck)
     {
-        int randomIndex = Random.Range(stPos, edPos);   //隨機選取卡片生成方法
-        CardAdd creator = cardAdds[randomIndex];    //指定生成方法
+        CardAdd creator = cardAdds[id];    //指定生成方法
         return creator(deck);   //透過creater 創建卡片 回傳生成後的卡片
     }
 
