@@ -6,6 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 當前的掌控者
 /// </summary>
+[System.Serializable]
 public enum Keeper
 {
     Player,
@@ -78,12 +79,12 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("game init...");
 
         // 初始化玩家和敌人的卡组
-        InitializeDeck(playerDeck, deckObject_player, Keeper.Player);
-        InitializeDeck(enemyDeck, deckObject_enemy, Keeper.Enemy);
+        InitializeDeck(Keeper.Player);
+        InitializeDeck(Keeper.Enemy);
 
         // 玩家和敌人抽卡
-        DrawStartingHand(playerDeck, playerHand, Keeper.Player);
-        DrawStartingHand(enemyDeck, enemyHand, Keeper.Enemy);
+        DrawStartingHand(Keeper.Player);
+        DrawStartingHand(Keeper.Enemy);
 
         Debug.Log("game init done.");
 
@@ -95,18 +96,33 @@ public class BattleSystem : MonoBehaviour
     /// 初始化卡組
     /// </summary>
     /// <param name="deck">卡組</param>
-    void InitializeDeck(List<Card> deck, GameObject deckObject, Keeper keeper)
+    void InitializeDeck(Keeper keeper)
     {
+        List<Card> deck, hand;
+        GameObject deckObject;
+        if (keeper == Keeper.Player)
+        {
+            deck = playerDeck;
+            hand = playerHand;
+            deckObject = deckObject_player;
+        }
+        else
+        {
+            deck = enemyDeck;
+            hand = enemyHand;
+            deckObject = deckObject_enemy;
+        }
+
         // 这里可以添加初始化卡组的逻辑
-     
+
         //隨機生成卡組
-        for(int i =0;i<10;i++)
+        for (int i =0;i<10;i++)
         {
             int id = Random.Range(0, CardCreater.Instance.cardAdds.Count);
-            Card newCard = CardCreater.Instance.CreateCard(id, deckObject);
-            deck.Add(newCard);
+            Card newCard = CardCreater.Instance.CreateCard(id, deckObject); //create card
+            newCard.obj = deckObject;
 
-            if (keeper == Keeper.Player) handUI_content.GetComponent<AdvancedGridLayoutGroupHorizontal>().cellNum = deck.Count; //keep deck size right
+            deck.Add(newCard);  //add card to deck
         }
 
         string deckCardInfo = $"{keeper.ToString()} Deck: ";
@@ -125,11 +141,11 @@ public class BattleSystem : MonoBehaviour
     /// </summary>
     /// <param name="deck">卡組</param>
     /// <param name="hand"><手牌/param>
-    void DrawStartingHand(List<Card> deck, List<Card> hand, Keeper keeper)
+    void DrawStartingHand(Keeper keeper)
     {
         for (int i = 0; i < maxHandSize; i++)
         {
-            DrawCard(deck, hand, keeper);
+            DrawCard(keeper);
         }
     }
 
@@ -138,25 +154,57 @@ public class BattleSystem : MonoBehaviour
     /// </summary>
     /// <param name="deck">卡組</param>
     /// <param name="hand">手牌</param>
-    void DrawCard(List<Card> deck, List<Card> hand, Keeper keeper)
+    void DrawCard(Keeper keeper)
     {
+        List<Card> deck, hand;
+        if(keeper == Keeper.Player)
+        {
+            deck = playerDeck;
+            hand = playerHand;
+        }else
+        {
+            deck = enemyDeck;
+            hand = enemyHand;
+        }
+
         if (deck.Count > 0 && hand.Count < maxHandSize)
         {
             Card drawnCard = deck[Random.Range(0, deck.Count)];
             hand.Add(drawnCard);
             deck.Remove(drawnCard);
 
+            //if player, updated its deck
             if(keeper == Keeper.Player)
             {
                 GameObject cardObject = Instantiate(cardPrefabs, handUI_content.transform);   //生成卡牌遊戲物體
                 Card card = cardObject.GetComponent<Card>();
                 card.Copy(drawnCard);   //複製卡牌資料
+                card.recCard = drawnCard;
                 card.textMeshProUGUI_name.text = card.cardName; //設置卡牌名稱
-                card.handId = hand.Count - 1;   //設置卡牌在手牌中的位置
             }
 
-            if (keeper == Keeper.Player) handUI_content.GetComponent<AdvancedGridLayoutGroupHorizontal>().cellNum = deck.Count; //keep deck size right
+            if (keeper == Keeper.Player) UpdateHand();
         }
+    }
+
+    public void UseCard(Card card, Keeper keeper)
+    {
+        List<Card> hand;
+        if (keeper == Keeper.Player) hand = playerHand;
+        else hand = enemyHand;
+
+        Debug.Log($"使用 {card.cardName} 卡牌");
+
+        hand.Remove(card);
+        Destroy(card);
+    }
+
+    /// <summary>
+    /// 更新手牌區域顯示UI
+    /// </summary>
+    public void UpdateHand()
+    {
+        handUI_content.GetComponent<AdvancedGridLayoutGroupHorizontal>().cellNum = playerHand.Count; //keep hand size right
     }
 
     IEnumerator GameLoop()
