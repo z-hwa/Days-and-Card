@@ -6,10 +6,10 @@ using UnityEngine;
 public class Card : MonoBehaviour
 {
     [Header("全局屬性")]
-    public int cardId;
+    public int cardId;  //對應儲存在卡牌列表中的值
     public string cardName;
-    public int attack;
-    public int defense;
+    public string cardInfo;
+    public string cardEffect;
 
     [Header("暫存屬性")]
     public GameObject obj;  //組件所屬於的object
@@ -24,8 +24,8 @@ public class Card : MonoBehaviour
     {
         cardId = card.cardId;
         cardName = card.cardName;
-        attack = card.attack;
-        defense = card.defense;
+        cardInfo = card.cardInfo;
+        cardEffect = card.cardEffect;
     }
 
     /// <summary>
@@ -35,11 +35,34 @@ public class Card : MonoBehaviour
     /// <param name="index">編號</param>
     public void UseCard(int keeper)
     {
-        if (keeper == ((int)Keeper.Player)) BattleSystem.Instance.UseCard(recCard, Keeper.Player);
-        else BattleSystem.Instance.UseCard(this, Keeper.Enemy);
+        //檢測是否能夠使用卡牌
+        if (keeper == ((int)Keeper.Player) && BattleSystem.Instance.isPlayerDone == true)
+        {
+            Debug.Log("現在不是你的回合");
+            return;
+        }
+        else if(keeper == ((int)Keeper.Enemy) && BattleSystem.Instance.isEnemyDone == true) return;
+     
+        if (keeper == ((int)Keeper.Player))
+        {
+            BattleSystem.Instance.UseCard(recCard, Keeper.Player);
+        }
+        else
+        {
+            BattleSystem.Instance.UseCard(recCard, Keeper.Enemy);
+        }
 
         Destroy(this.gameObject);
         if (keeper == ((int)Keeper.Player)) BattleSystem.Instance.UpdateHand(); //keep deck size right
+    }
+
+    /// <summary>
+    /// 使用卡牌效果
+    /// </summary>
+    /// <param name="keeper">使用者</param>
+    public virtual void Using(Keeper keeper)
+    {
+
     }
 }
 

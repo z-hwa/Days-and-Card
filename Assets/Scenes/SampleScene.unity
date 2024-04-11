@@ -503,6 +503,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091000774}
   m_CullTransparentMesh: 0
+--- !u!1 &1355540292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355540294}
+  - component: {fileID: 1355540293}
+  m_Layer: 0
+  m_Name: CardCreater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1355540293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355540292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713a45dd96d06f3449d1a2afe089e70d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1355540294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355540292}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 672.402, y: 1531.2001, z: -1510.6168}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1545623535
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,18 +763,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nowTurn: 0
   turnLimit: 10
+  maxHandSize: 100
+  initHandSize: 5
+  gameStatus: 0
   playerDeck: []
   playerHand: []
   playerField: []
+  enemyDeck: []
+  enemyHand: []
+  enemyField: []
   deckObject_player: {fileID: 28236484}
   handUI_content: {fileID: 983820744}
   cardPrefabs: {fileID: 5946115974548006884, guid: d0dea6899a38a3a46a1e12366334e6e9,
     type: 3}
-  enemyDeck: []
-  enemyHand: []
-  enemyField: []
+  isPlayerDone: 1
+  playerHp: 20
   deckObject_enemy: {fileID: 1612800818}
-  maxHandSize: 5
+  isEnemyDone: 1
+  enemyHP: 20
 --- !u!4 &2071749285
 Transform:
   m_ObjectHideFlags: 0
@@ -755,6 +804,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2071749283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 713a45dd96d06f3449d1a2afe089e70d, type: 3}
+  m_Script: {fileID: 11500000, guid: c26c63be45008184196b63a0ac681ccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
